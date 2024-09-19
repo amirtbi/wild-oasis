@@ -1,6 +1,10 @@
-import styled, { css } from "styled-components";
+import styled, { css, RuleSet } from "styled-components";
 
-const sizes = {
+const sizes: {
+  small: RuleSet<object>;
+  large: RuleSet<object>;
+  medium: RuleSet<object>;
+} = {
   small: css`
     font-size: 1.2rem;
     padding: 0.4rem 0.8rem;
@@ -48,18 +52,19 @@ const variations = {
   `,
 };
 
-export const Button = styled.button`
-  font-size: 1.4rem;
-  padding: 1.2rem 1.6rem;
-  font-weight: 500;
+export const Button = styled.button<{
+  variant?: "primary" | "danger" | "secondary";
+  size: "small" | "medium" | "large";
+}>`
   border: none;
   border-radius: var(--border-radius-sm);
-  background-color: var(--color-brand-600);
-  color: var(--color-brand-50);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
 
-  &:hover {
-    background-color: var(--color-brand-700);
-  }
+  ${(props) => sizes[props.size!]};
+  ${(props) => variations[props.variant!]};
 `;
+Button.defaultProps = {
+  size: "medium",
+  variant: "primary",
+};

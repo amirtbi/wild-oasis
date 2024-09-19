@@ -71,7 +71,7 @@ html {
   font-size: 62.5%;
 }
 
-body {
+body,#root {
   font-family: "Poppins", sans-serif;
   color: var(--color-grey-700);
 

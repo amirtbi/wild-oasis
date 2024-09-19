@@ -1,20 +1,18 @@
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import { Button } from "../ui/Button";
+import Heading from "../ui/Heading";
 
-const H1 = styled.h1`
-  font-size: 20px;
-  font-family: "poppins";
-  padding: 1rem;
-`;
 export const CheckinPage = () => {
   return (
     <>
       <div>
-        <H1>Check in -out page</H1>
+        <Heading type="h1">Check in -out page</Heading>
+        <Heading type="h2">Forms</Heading>
         <div>
           <Link to="/dashboard">Dashboard</Link>
-          <Button color="secondary">Material ui button</Button>
+          <Button variant="primary" size="medium" color="secondary">
+            Material ui button
+          </Button>
           <p className="text-red-700">own text</p>
         </div>
       </div>

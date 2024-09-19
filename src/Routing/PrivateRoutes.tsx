@@ -6,6 +6,7 @@ import { UsersPage } from "../pages/UsersPage";
 import { SettingsPage } from "../pages/SettingsPage";
 import { AccountPage } from "../pages/AccountPage";
 import { DashboardPage } from "../pages/DashboardPage";
+import { BookingsPage } from "../pages/BookingsPage";
 
 export const PrivateRoutes = () => {
   return (
@@ -17,6 +18,7 @@ export const PrivateRoutes = () => {
           <Route path="check-in" element={<CheckinPage />} />
           <Route path="cabins" element={<CabinPage />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="bookings" element={<BookingsPage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="account" element={<AccountPage />} />
           <Route path="*" element={<Navigate to="/error/404" />} />

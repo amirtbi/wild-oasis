@@ -7,11 +7,12 @@ import { AuthPage } from "../pages/AuthPage";
 import { Error404 } from "../features/Error/404";
 import GlobalStyles from "../styles/GlobalStyles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000,
+      staleTime: 0,
     },
   },
 });
@@ -20,6 +21,7 @@ const AppRoutes = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
         <GlobalStyles />
         <BrowserRouter basename="/">
           <Routes>

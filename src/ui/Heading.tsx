@@ -8,7 +8,7 @@ const typings = {
   h1: css`
     font-size: 3rem;
     font-weight: 600;
-    color: white;
+    color: var(--color-grey-700);
   `,
   h2: css`
     font-size: 2rem;

@@ -8,6 +8,7 @@ import { Error404 } from "../features/Error/404";
 import GlobalStyles from "../styles/GlobalStyles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Toaster } from "react-hot-toast";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +44,25 @@ const AppRoutes = () => {
             </Route>
           </Routes>
         </BrowserRouter>
+        <Toaster
+          position="top-right"
+          gutter={12}
+          containerStyle={{ margin: "8px" }}
+          toastOptions={{
+            success: {
+              duration: 3000,
+            },
+            error: {
+              duration: 5000,
+            },
+            style: {
+              backgroundColor: "var(--color-grey-0)",
+              color: "var(--color-grey-700)",
+              fontSize: "16px",
+              padding: "16px 24px",
+            },
+          }}
+        />
       </QueryClientProvider>
     </>
   );

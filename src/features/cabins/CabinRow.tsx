@@ -3,7 +3,6 @@ import { ICabins } from "./cabins.model";
 import { formatCurrency } from "../../utils/helper";
 import { deleteCabin } from "../../services/apiCabins";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import toast from "react-hot-toast";
 
 const TableRow = styled.div`

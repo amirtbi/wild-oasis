@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { getCabins } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
 import { CabinRow } from "./CabinRow";
+import { CreateCabinForm } from "./CreateCabinForm";
+import { Modal, Overlay } from "../../ui/Modal";
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);

@@ -8,3 +8,5 @@ export interface ICabins {
     name: string;
     regularPrice: number
 }
+
+export type createCabinType = Omit<ICabins, "create_at" | "id">

@@ -1,3 +1,4 @@
+import { createCabinType } from "../features/cabins/cabins.model";
 import supabase from "./supabase"
 
 export const getCabins = async () => {
@@ -13,6 +14,21 @@ export const getCabins = async () => {
     }
 
     return data;
+}
+
+export const createCabin = async (newCabin: createCabinType) => {
+
+    const { data, error } = await supabase
+        .from('Cabins')
+        .insert([
+            newCabin
+        ])
+        .select();
+    if (error) {
+        throw new Error("Error happened during inserting cabin");
+    }
+    return data;
+
 }
 
 export const deleteCabin = async (id: number) => {

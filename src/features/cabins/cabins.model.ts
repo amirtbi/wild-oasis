@@ -3,7 +3,7 @@ export interface ICabins {
     create_at: string;
     description: string;
     discount: number;
-    image: string;
+    image: any;
     maxCapacity: number;
     name: string;
     regularPrice: number

@@ -48,7 +48,7 @@ export const CreateCabinForm = () => {
     },
   });
   const onCreateCabin = (formData: createCabinType) => {
-    mutate(formData);
+    mutate({ ...formData, image: formData.image[0] });
   };
 
   const handleOnCancle = (e: FormEvent) => {
@@ -65,6 +65,7 @@ export const CreateCabinForm = () => {
         <FormRow label="Cabin name">
           <Input
             id="name"
+            disabled={isPending}
             type="text"
             {...register("name", { required: "Field is required!" })}
           />
@@ -74,6 +75,7 @@ export const CreateCabinForm = () => {
           <Input
             type="number"
             id="maxCapacity"
+            disabled={isPending}
             {...register("maxCapacity", {
               required: "Field is required",
               min: {
@@ -90,6 +92,7 @@ export const CreateCabinForm = () => {
           <Input
             type="number"
             id="regularPrice"
+            disabled={isPending}
             {...register("regularPrice", {
               required: "Field is required!",
               min: {
@@ -106,12 +109,13 @@ export const CreateCabinForm = () => {
           <Input
             type="number"
             id="discount"
+            disabled={isPending}
             defaultValue={0}
             {...register("discount", {
               required: "Field is required",
               validate: (value) => {
                 return (
-                  value <= getValues().regularPrice ||
+                  value <= +getValues().regularPrice ||
                   "Discount value must be less than regular price"
                 );
               },
@@ -125,6 +129,7 @@ export const CreateCabinForm = () => {
           <TextArea
             id="description"
             defaultValue=""
+            disabled={isPending}
             {...register("description", { required: "field is required" })}
           />
           {errors.description && (
@@ -132,7 +137,10 @@ export const CreateCabinForm = () => {
           )}
         </FormRow>
         <FormRow label="Cabin photo">
-          <FileInput type="file" {...register("image")} />
+          <FileInput
+            accept="image/*"
+            {...register("image", { required: true })}
+          />
         </FormRow>
 
         <FormRow>

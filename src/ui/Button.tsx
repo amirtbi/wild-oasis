@@ -61,6 +61,7 @@ export const Button = styled.button<{
   box-shadow: var(--shadow-sm);
   cursor: pointer;
 
+  pointer-events: ${(props) => (props.disabled ? "none" : "")};
   ${(props) => sizes[props.size!]};
   ${(props) => variations[props.variant!]};
 `;

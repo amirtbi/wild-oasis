@@ -1,5 +1,5 @@
 import { createCabinType } from "../features/cabins/cabins.model";
-import supabase from "./supabase"
+import supabase, { supabaseUrl } from "./supabase"
 
 export const getCabins = async () => {
 
@@ -17,16 +17,42 @@ export const getCabins = async () => {
 }
 
 export const createCabin = async (newCabin: createCabinType) => {
-
+    let imagePath = "";
+    let imageName = "";
+    debugger
+    if (typeof newCabin.image === "object") {
+        imageName = `${Math.floor(Math.random()) * 10}-${newCabin.image.name}`.replaceAll("/", "");
+        imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
+    }
     const { data, error } = await supabase
         .from('Cabins')
         .insert([
-            newCabin
+            { ...newCabin, image: imagePath }
         ])
         .select();
     if (error) {
         throw new Error("Error happened during inserting cabin");
     }
+
+    console.log("data", data)
+    // upload file
+
+    if (typeof newCabin.image === "object") {
+
+        const { error: uploadError } = await supabase
+            .storage
+            .from('cabin-images')
+            .upload(imageName, newCabin.image,
+            )
+        if (uploadError) {
+            await supabase
+                .from('Cabins')
+                .delete()
+                .eq('id', data[0].id);
+        }
+    }
+
+
     return data;
 
 }

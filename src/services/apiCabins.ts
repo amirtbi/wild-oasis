@@ -16,44 +16,60 @@ export const getCabins = async () => {
     return data;
 }
 
-export const createCabin = async (newCabin: createCabinType) => {
+export const createEditCabin = async (newCabin: createCabinType, id?: number) => {
     let imagePath = "";
     let imageName = "";
-    debugger
     if (typeof newCabin.image === "object") {
-        imageName = `${Math.floor(Math.random()) * 10}-${newCabin.image.name}`.replaceAll("/", "");
+        imageName = `${Math.floor(Math.random()) * 10}-${newCabin.image[0] ? newCabin.image[0].name : newCabin.image.name}`.replaceAll("/", "");
         imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
-    }
-    const { data, error } = await supabase
-        .from('Cabins')
-        .insert([
-            { ...newCabin, image: imagePath }
-        ])
-        .select();
-    if (error) {
-        throw new Error("Error happened during inserting cabin");
+    } else {
+        imagePath = newCabin.image
     }
 
-    console.log("data", data)
-    // upload file
+    async function uploadImage(data: any) {
+        if (typeof newCabin.image === "object") {
 
-    if (typeof newCabin.image === "object") {
-
-        const { error: uploadError } = await supabase
-            .storage
-            .from('cabin-images')
-            .upload(imageName, newCabin.image,
-            )
-        if (uploadError) {
-            await supabase
-                .from('Cabins')
-                .delete()
-                .eq('id', data[0].id);
+            const { error: uploadError } = await supabase
+                .storage
+                .from('cabin-images')
+                .upload(imageName, newCabin.image[0] ? newCabin.image[0] : newCabin.image,
+                )
+            if (uploadError) {
+                await supabase
+                    .from('Cabins')
+                    .delete()
+                    .eq('id', data.id);
+            }
         }
     }
 
 
-    return data;
+    // Create 
+    if (!id) {
+        const { data, error } = await supabase.from("Cabins").insert([
+            { ...newCabin, image: imagePath }
+        ]).select().single();
+
+        debugger
+        if (error) {
+            throw new Error("Error happened during inserting cabin")
+        }
+        if (data) uploadImage(data);
+        return data;
+    }
+    // Edit
+    if (id) {
+        const { data, error } = await supabase.from("Cabins")
+            .update({ ...newCabin, image: imagePath })
+            .eq('id', id).select().single();
+        if (error) {
+            throw new Error("Error happened during editing cabin")
+        }
+        if (data) uploadImage(data);
+        return data
+    }
+
+
 
 }
 

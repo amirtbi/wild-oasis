@@ -3,8 +3,6 @@ import styled from "styled-components";
 import { getCabins } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
 import { CabinRow } from "./CabinRow";
-import { CreateCabinForm } from "./CreateCabinForm";
-import { Modal, Overlay } from "../../ui/Modal";
 
 const Table = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -41,20 +39,22 @@ export const CabinTable = () => {
   }
 
   return (
-    <Table role="table">
-      <TableHeader role="row">
-        <div></div>
-        <div>Cabin</div>
-        <div>CAPACITY</div>
-        <div>PRICE</div>
-        <div>DISCOUNT</div>
-        <div>Action</div>
-      </TableHeader>
-      {cabins?.map((cabin, index) => (
-        <>
-          <CabinRow cabin={cabin} key={index} />
-        </>
-      ))}
-    </Table>
+    <>
+      <Table role="table">
+        <TableHeader role="row">
+          <div></div>
+          <div>Cabin</div>
+          <div>CAPACITY</div>
+          <div>PRICE</div>
+          <div>DISCOUNT</div>
+          <div>Action</div>
+        </TableHeader>
+        {cabins?.map((cabin) => (
+          <>
+            <CabinRow cabin={cabin} key={cabin.id} />
+          </>
+        ))}
+      </Table>
+    </>
   );
 };

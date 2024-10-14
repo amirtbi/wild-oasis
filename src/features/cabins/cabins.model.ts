@@ -3,10 +3,10 @@ export interface ICabins {
     create_at: string;
     description: string;
     discount: number;
-    image: any;
+    image: any | string;
     maxCapacity: number;
     name: string;
     regularPrice: number
 }
 
-export type createCabinType = Omit<ICabins, "create_at" | "id">
+export type createCabinType = Omit<ICabins, "create_at">

@@ -7,15 +7,10 @@ import TextArea from "../../ui/TextArea";
 import { createCabinType } from "./cabins.model";
 import { Button } from "../../ui/Button";
 import { styled } from "styled-components";
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { createCabin } from "../../services/apiCabins";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createEditCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 import { FormEvent } from "react";
-
 const ErrorMessage = styled.span`
   font-weight: 500;
   font-size: 10px;
@@ -23,19 +18,28 @@ const ErrorMessage = styled.span`
   margin: 0 1rem;
 `;
 
-export const CreateCabinForm = () => {
+export const CreateCabinForm = ({
+  onShow,
+  cabinToEdit,
+}: {
+  onShow?: (value: boolean) => void;
+  cabinToEdit?: createCabinType;
+}) => {
+  const isEditionSession = Boolean(cabinToEdit?.id);
   const {
     handleSubmit,
     register,
     reset,
     getValues,
     formState: { errors },
-  } = useForm<createCabinType>();
+  } = useForm<createCabinType>({
+    defaultValues: isEditionSession ? cabinToEdit : {},
+  });
 
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: createCabin,
+  const { mutate: createCabin, isPending: isCreating } = useMutation({
+    mutationFn: createEditCabin,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["cabin"],
@@ -47,25 +51,47 @@ export const CreateCabinForm = () => {
       toast.error("Adding cabin failed!");
     },
   });
-  const onCreateCabin = (formData: createCabinType) => {
-    mutate({ ...formData, image: formData.image[0] });
+
+  const { mutate: editCabin, isPending: isEditing } = useMutation({
+    mutationFn: (data: { newCabin: createCabinType; id: number }) =>
+      createEditCabin(data.newCabin, data.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["cabin"],
+      });
+      toast.success("Cabin successfully edited");
+
+      onShow?.(true);
+      reset();
+    },
+    onError: () => {
+      toast.error("Editing failed!");
+    },
+  });
+
+  const onCreateEditCabin = (formData: createCabinType) => {
+    if (isEditionSession) {
+      editCabin({
+        newCabin: { ...formData, image: formData.image },
+        id: (cabinToEdit as createCabinType).id as number,
+      });
+    } else {
+      createCabin({ ...formData, image: formData.image[0] });
+    }
   };
 
   const handleOnCancle = (e: FormEvent) => {
     e.preventDefault();
+    onShow?.(false);
   };
 
-  const onError = (errors: any) => {
-    toast.error("Error happened during form submiting");
-    console.log("errors", errors);
-  };
   return (
     <>
-      <Form onSubmit={handleSubmit(onCreateCabin, onError)}>
+      <Form onSubmit={handleSubmit(onCreateEditCabin)}>
         <FormRow label="Cabin name">
           <Input
             id="name"
-            disabled={isPending}
+            disabled={isEditionSession ? isEditing : isCreating}
             type="text"
             {...register("name", { required: "Field is required!" })}
           />
@@ -75,7 +101,7 @@ export const CreateCabinForm = () => {
           <Input
             type="number"
             id="maxCapacity"
-            disabled={isPending}
+            disabled={isEditionSession ? isEditing : isCreating}
             {...register("maxCapacity", {
               required: "Field is required",
               min: {
@@ -92,7 +118,7 @@ export const CreateCabinForm = () => {
           <Input
             type="number"
             id="regularPrice"
-            disabled={isPending}
+            disabled={isEditionSession ? isEditing : isCreating}
             {...register("regularPrice", {
               required: "Field is required!",
               min: {
@@ -109,7 +135,7 @@ export const CreateCabinForm = () => {
           <Input
             type="number"
             id="discount"
-            disabled={isPending}
+            disabled={isEditionSession ? isEditing : isCreating}
             defaultValue={0}
             {...register("discount", {
               required: "Field is required",
@@ -129,7 +155,7 @@ export const CreateCabinForm = () => {
           <TextArea
             id="description"
             defaultValue=""
-            disabled={isPending}
+            disabled={isEditionSession ? isEditing : isCreating}
             {...register("description", { required: "field is required" })}
           />
           {errors.description && (
@@ -139,26 +165,23 @@ export const CreateCabinForm = () => {
         <FormRow label="Cabin photo">
           <FileInput
             accept="image/*"
-            {...register("image", { required: true })}
+            {...register("image", {
+              required: isEditionSession ? false : "Image file is required",
+            })}
           />
         </FormRow>
 
         <FormRow>
-          <Button
-            variant="secondary"
-            size="medium"
-            type="reset"
-            onClick={handleOnCancle}
-          >
+          <Button variant="secondary" size="medium" onClick={handleOnCancle}>
             Cancel
           </Button>
           <Button
-            disabled={isPending}
+            disabled={isEditionSession ? isEditing : isCreating}
             variant="primary"
             size="medium"
             type="submit"
           >
-            Add cabin
+            {isEditionSession ? "Edit cabin" : "Add cabin"}
           </Button>
         </FormRow>
       </Form>

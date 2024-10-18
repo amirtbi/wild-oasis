@@ -1,4 +1,4 @@
-import { ISettings } from "../features/settings/settings.model";
+import { ISettings, updateSettingType } from "../features/settings/settings.model";
 import supabase from "./supabase";
 
 export async function getSettings(): Promise<ISettings> {
@@ -10,11 +10,10 @@ export async function getSettings(): Promise<ISettings> {
         throw new Error("Settings could not be loaded");
 
     }
-
-    return data[0];
+    return data;
 }
 
-export async function updateSetting(newSettings: ISettings) {
+export async function updateSetting(newSettings: updateSettingType) {
     const { data, error } = await supabase
         .from('settings')
         .update(newSettings)

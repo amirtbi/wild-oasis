@@ -6,17 +6,11 @@ import { Input } from "../../ui/Input";
 import TextArea from "../../ui/TextArea";
 import { createCabinType } from "./cabins.model";
 import { Button } from "../../ui/Button";
-import { styled } from "styled-components";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createEditCabin } from "../../services/apiCabins";
 import toast from "react-hot-toast";
 import { FormEvent } from "react";
-const ErrorMessage = styled.span`
-  font-weight: 500;
-  font-size: 10px;
-  color: var(--color-red-700);
-  margin: 0 1rem;
-`;
+import { ErrorMessage } from "../../ui/ErrorMessage";
 
 export const CreateCabinForm = ({
   onShow,

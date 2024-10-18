@@ -6,3 +6,4 @@ export interface ISettings {
     maxGuestsPerBooking: number;
     breakfastPrice: number;
 }
+export type updateSettingType = Partial<ISettings>

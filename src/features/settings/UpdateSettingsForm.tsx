@@ -18,21 +18,14 @@ export const UpdateSettings = () => {
     reset,
     getValues,
     formState: { errors },
-  } = useForm<updateSettingType>({
-    defaultValues: {
-      minBookingLength: data?.minBookingLength,
-      maxBookingLength: data?.maxBookingLength,
-      maxGuestsPerBooking: data?.maxGuestsPerBooking,
-      breakfastPrice: data?.breakfastPrice,
-    },
-  });
+  } = useForm<updateSettingType>({});
   const { onUpdateSetting } = useUpdateSettings();
 
   useEffect(() => {
     reset();
-  }, [reset]);
+  }, [data, reset]);
 
-  if (isLoading) {
+  if (isLoading && !data) {
     return <Spinner />;
   }
 
@@ -48,6 +41,7 @@ export const UpdateSettings = () => {
             type="number"
             id="min-nights"
             {...register("minBookingLength", { required: "field is required" })}
+            defaultValue={data?.minBookingLength}
           />
           {errors.minBookingLength && (
             <ErrorMessage>{errors.minBookingLength?.message}</ErrorMessage>
@@ -58,6 +52,7 @@ export const UpdateSettings = () => {
             type="number"
             id="max-nights"
             {...register("maxBookingLength", { required: "Field is required" })}
+            defaultValue={data?.maxBookingLength}
           />
           {errors.maxBookingLength && (
             <ErrorMessage>{errors.maxBookingLength.message}</ErrorMessage>
@@ -70,6 +65,7 @@ export const UpdateSettings = () => {
             {...register("maxGuestsPerBooking", {
               required: "field is required",
             })}
+            defaultValue={data?.maxGuestsPerBooking}
           />
           {errors.maxBookingLength && (
             <ErrorMessage>{errors.maxGuestsPerBooking?.message}</ErrorMessage>
@@ -80,6 +76,7 @@ export const UpdateSettings = () => {
             {...register("breakfastPrice", { required: "field is required" })}
             type="number"
             id="breakfast-price"
+            defaultValue={data?.breakfastPrice}
           />
           {errors.breakfastPrice && (
             <ErrorMessage>{errors.breakfastPrice?.message}</ErrorMessage>

@@ -1,7 +1,7 @@
 import Row from "../ui/Row";
 import Heading from "../ui/Heading";
 import { CabinTable } from "../features/cabins/CabinTable";
-import { CreateCabinForm } from "../features/cabins/CreateCabinForm";
+import { AddCabin } from "../features/cabins/AddCabin";
 
 export const CabinPage = () => {
   return (
@@ -14,7 +14,7 @@ export const CabinPage = () => {
       </Row>
       <Row>
         <CabinTable />
-        <CreateCabinForm></CreateCabinForm>
+        <AddCabin />
       </Row>
     </>
   );

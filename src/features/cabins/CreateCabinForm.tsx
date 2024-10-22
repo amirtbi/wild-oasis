@@ -6,7 +6,6 @@ import { Input } from "../../ui/Input";
 import TextArea from "../../ui/TextArea";
 import { createCabinType } from "./cabins.model";
 import { Button } from "../../ui/Button";
-import { FormEvent } from "react";
 import { ErrorMessage } from "../../ui/ErrorMessage";
 import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
@@ -15,7 +14,7 @@ export const CreateCabinForm = ({
   onShow,
   cabinToEdit,
 }: {
-  onShow?: (value: boolean) => void;
+  onShow?: () => void;
   cabinToEdit?: createCabinType;
 }) => {
   const isEditionSession = Boolean(cabinToEdit?.id);
@@ -35,24 +34,37 @@ export const CreateCabinForm = ({
 
   const onCreateEditCabin = (formData: createCabinType) => {
     if (isEditionSession) {
-      editCabin({
-        newCabin: { ...formData, image: formData.image },
-        id: (cabinToEdit as createCabinType).id as number,
-      });
+      editCabin(
+        {
+          newCabin: { ...formData, image: formData.image },
+          id: (cabinToEdit as createCabinType).id as number,
+        },
+        {
+          onSuccess: () => {
+            reset();
+            onShow?.();
+          },
+        }
+      );
     } else {
-      createCabin({ ...formData, image: formData.image[0] });
+      createCabin(
+        { ...formData, image: formData.image[0] },
+        {
+          onSuccess: () => {
+            reset();
+            onShow?.();
+          },
+        }
+      );
     }
-    reset();
-  };
-
-  const handleOnCancle = (e: FormEvent) => {
-    e.preventDefault();
-    onShow?.(false);
   };
 
   return (
     <>
-      <Form onSubmit={handleSubmit(onCreateEditCabin)}>
+      <Form
+        onSubmit={handleSubmit(onCreateEditCabin)}
+        type={onShow ? "modal" : "regular"}
+      >
         <FormRow label="Cabin name">
           <Input
             id="name"
@@ -137,7 +149,12 @@ export const CreateCabinForm = ({
         </FormRow>
 
         <FormRow>
-          <Button variant="secondary" size="medium" onClick={handleOnCancle}>
+          <Button
+            variant="secondary"
+            type="reset"
+            onClickCapture={() => onShow?.()}
+            size="medium"
+          >
             Cancel
           </Button>
           <Button

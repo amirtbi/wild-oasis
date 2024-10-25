@@ -32,6 +32,9 @@ export const CreateCabinForm = ({
 
   const { editCabin, isEditing } = useEditCabin();
 
+  const handleClose = () => {
+    onClose?.();
+  };
   const onCreateEditCabin = (formData: createCabinType) => {
     if (isEditionSession) {
       editCabin(
@@ -152,7 +155,7 @@ export const CreateCabinForm = ({
           <Button
             variant="secondary"
             type="reset"
-            onClickCapture={() => onClose?.()}
+            onClick={() => handleClose()}
             size="medium"
           >
             Cancel

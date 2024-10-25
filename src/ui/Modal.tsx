@@ -1,18 +1,15 @@
 import {
   cloneElement,
   createContext,
-  MutableRefObject,
   ReactNode,
   useCallback,
   useContext,
-  useEffect,
-  useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
-import { FastOmit, IStyledComponentBase } from "styled-components/dist/types";
+import { useClickOutSide } from "../hooks/userClickOutside";
 
 const DIV = styled.div`
   position: fixed;
@@ -36,6 +33,11 @@ const Overlay = styled.div`
   backdrop-filter: blur(4px);
   z-index: 1000;
   transition: all 0.5s;
+`;
+
+const Content = styled.div`
+  max-height: 600px;
+  overflow-y: auto;
 `;
 
 const Button = styled.button`
@@ -112,25 +114,11 @@ const Window = ({
   children: JSX.Element;
   name: string;
 }) => {
-  const ref = useRef<HTMLDivElement>() as MutableRefObject<HTMLDivElement>;
   const { openName, close } = useContext(ModalContext) as {
     openName: string;
     close: () => void;
   };
-
-  useEffect(() => {
-    const handleClickOutside = (e: any) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        console.log("clicked");
-        close();
-      }
-    };
-
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  }, [close]);
+  const { ref } = useClickOutSide(close);
 
   if (name !== openName) return null;
 
@@ -140,7 +128,7 @@ const Window = ({
         <Button onClick={close}>
           <HiXMark />
         </Button>
-        <div>{cloneElement(children, { onClose: close })}</div>
+        <Content>{cloneElement(children, { onClose: close })}</Content>
       </DIV>
     </Overlay>,
     document.body

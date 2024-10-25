@@ -1,15 +1,20 @@
 import {
   cloneElement,
   createContext,
+  MutableRefObject,
   ReactNode,
+  useCallback,
   useContext,
+  useEffect,
+  useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
+import { FastOmit, IStyledComponentBase } from "styled-components/dist/types";
 
-const StyledModal = styled.div`
+const DIV = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -68,7 +73,9 @@ const ModalContext = createContext<{
 const Modal = ({ children }: { children: ReactNode }) => {
   const [openName, setOpenName] = useState("");
 
-  const close = () => setOpenName("");
+  const close = useCallback(() => {
+    setOpenName("");
+  }, []);
   const open = (openName: string) => setOpenName(openName);
 
   return (
@@ -105,20 +112,36 @@ const Window = ({
   children: JSX.Element;
   name: string;
 }) => {
+  const ref = useRef<HTMLDivElement>() as MutableRefObject<HTMLDivElement>;
   const { openName, close } = useContext(ModalContext) as {
     openName: string;
     close: () => void;
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: any) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        console.log("clicked");
+        close();
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, [close]);
+
   if (name !== openName) return null;
 
   return createPortal(
     <Overlay>
-      <StyledModal>
+      <DIV ref={ref}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
         <div>{cloneElement(children, { onClose: close })}</div>
-      </StyledModal>
+      </DIV>
     </Overlay>,
     document.body
   );

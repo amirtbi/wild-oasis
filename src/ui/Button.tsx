@@ -59,7 +59,7 @@ export const Button = styled.button<{
   border: none;
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-sm);
-  cursor: pointer;
+  cursor: pointer !important;
 
   pointer-events: ${(props) => (props.disabled ? "none" : "")};
   ${(props) => sizes[props.size!]};

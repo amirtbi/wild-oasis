@@ -11,10 +11,10 @@ import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
 
 export const CreateCabinForm = ({
-  onShow,
+  onClose,
   cabinToEdit,
 }: {
-  onShow?: () => void;
+  onClose?: () => void;
   cabinToEdit?: createCabinType;
 }) => {
   const isEditionSession = Boolean(cabinToEdit?.id);
@@ -42,7 +42,7 @@ export const CreateCabinForm = ({
         {
           onSuccess: () => {
             reset();
-            onShow?.();
+            onClose?.();
           },
         }
       );
@@ -52,7 +52,7 @@ export const CreateCabinForm = ({
         {
           onSuccess: () => {
             reset();
-            onShow?.();
+            onClose?.();
           },
         }
       );
@@ -63,7 +63,7 @@ export const CreateCabinForm = ({
     <>
       <Form
         onSubmit={handleSubmit(onCreateEditCabin)}
-        type={onShow ? "modal" : "regular"}
+        type={onClose ? "modal" : "regular"}
       >
         <FormRow label="Cabin name">
           <Input
@@ -152,7 +152,7 @@ export const CreateCabinForm = ({
           <Button
             variant="secondary"
             type="reset"
-            onClickCapture={() => onShow?.()}
+            onClickCapture={() => onClose?.()}
             size="medium"
           >
             Cancel

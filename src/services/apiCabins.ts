@@ -50,7 +50,6 @@ export const createEditCabin = async (newCabin: createCabinType, id?: number) =>
             { ...newCabin, image: imagePath }
         ]).select().single();
 
-        debugger
         if (error) {
             throw new Error("Error happened during inserting cabin")
         }

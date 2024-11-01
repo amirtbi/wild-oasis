@@ -54,7 +54,7 @@ const variations = {
 
 export const Button = styled.button<{
   variant?: "primary" | "danger" | "secondary";
-  size: "small" | "medium" | "large";
+  size?: "small" | "medium" | "large";
 }>`
   border: none;
   border-radius: var(--border-radius-sm);
@@ -62,7 +62,7 @@ export const Button = styled.button<{
   cursor: pointer !important;
 
   pointer-events: ${(props) => (props.disabled ? "none" : "")};
-  ${(props) => sizes[props.size!]};
+  ${(props) => (props.size ? sizes[props.size!] : "medium")};
   ${(props) => variations[props.variant!]};
 `;
 Button.defaultProps = {

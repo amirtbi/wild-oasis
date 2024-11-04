@@ -1,4 +1,6 @@
+import { createContext, ReactElement, useContext } from "react";
 import styled from "styled-components";
+import { ICabins } from "../features/cabins/cabins.model";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
@@ -9,7 +11,7 @@ const StyledTable = styled.div`
   overflow: hidden;
 `;
 
-const CommonRow = styled.div`
+const CommonRow = styled.div<{ columns: string }>`
   display: grid;
   grid-template-columns: ${(props) => props.columns};
   column-gap: 2.4rem;
@@ -40,7 +42,7 @@ const StyledBody = styled.section`
   margin: 0.4rem 0;
 `;
 
-const Footer = styled.footer`
+const StyledFooter = styled.footer`
   background-color: var(--color-grey-50);
   display: flex;
   justify-content: center;
@@ -58,3 +60,70 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+
+const TableContext = createContext<{ columns: string } | null>(null);
+
+export const Table = ({
+  children,
+  columns,
+}: {
+  children: JSX.Element;
+  columns: string;
+}) => {
+  const contextValue = {
+    columns,
+  };
+  return (
+    <>
+      <TableContext.Provider value={contextValue}>
+        <StyledTable role="table">{children}</StyledTable>
+      </TableContext.Provider>
+    </>
+  );
+};
+
+const Header = ({ children }: { children: JSX.Element[] }) => {
+  const { columns } = useContext(TableContext) as { columns: string };
+  return (
+    <>
+      <StyledHeader role="row" columns={columns}>
+        {children}
+      </StyledHeader>
+    </>
+  );
+};
+
+const Row = ({ children }: { children: JSX.Element[] }) => {
+  const { columns } = useContext(TableContext) as { columns: string };
+  return (
+    <>
+      <StyledRow role="row" columns={columns}>
+        {children}
+      </StyledRow>
+    </>
+  );
+};
+
+const Footer = ({ children }: { children: ReactElement }) => {
+  return (
+    <>
+      <StyledFooter>{children}</StyledFooter>
+    </>
+  );
+};
+
+const Body = ({
+  render,
+  data,
+}: {
+  render: (data: ICabins) => React.ReactElement;
+  data: ICabins[] | undefined;
+}) => {
+  if (!data || data.length === 0) return <Empty>No data found</Empty>;
+  return <StyledBody>{data.map(render)}</StyledBody>;
+};
+
+Table.Header = Header;
+Table.Row = Row;
+Table.Body = Body;
+Table.Footer = Footer;

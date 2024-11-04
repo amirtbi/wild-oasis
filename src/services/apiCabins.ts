@@ -1,4 +1,4 @@
-import { createCabinType } from "../features/cabins/cabins.model";
+import { createCabinType, ICabins } from "../features/cabins/cabins.model";
 import supabase, { supabaseUrl } from "./supabase"
 
 export const getCabins = async () => {
@@ -13,7 +13,7 @@ export const getCabins = async () => {
 
     }
 
-    return data;
+    return data as ICabins[];
 }
 
 export const createEditCabin = async (newCabin: createCabinType, id?: number) => {

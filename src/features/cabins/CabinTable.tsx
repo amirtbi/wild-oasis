@@ -3,6 +3,7 @@ import { getCabins } from "../../services/apiCabins";
 import Spinner from "../../ui/Spinner";
 import { CabinRow } from "./CabinRow";
 import { Table } from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
 export const CabinTable = () => {
   const { isLoading, data: cabins } = useQuery({
@@ -15,7 +16,7 @@ export const CabinTable = () => {
   }
 
   return (
-    <>
+    <Menus>
       <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
         <>
           <Table.Header>
@@ -36,6 +37,6 @@ export const CabinTable = () => {
           />
         </>
       </Table>
-    </>
+    </Menus>
   );
 };

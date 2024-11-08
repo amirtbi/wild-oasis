@@ -7,9 +7,10 @@ import toast from "react-hot-toast";
 import { CreateCabinForm } from "./CreateCabinForm";
 import { Button } from "../../ui/Button";
 import Modal from "../../ui/Modal";
-import { HiMiniPencilSquare, HiMiniTrash } from "react-icons/hi2";
+import { HiMiniPencil, HiMiniPencilSquare, HiMiniTrash } from "react-icons/hi2";
 import ConfirmDelete from "../../ui/ConfirmDelete";
 import { Table } from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
 const Img = styled.img`
   display: block;
@@ -85,6 +86,29 @@ export const CabinRow = ({ cabin }: { cabin: ICabins }) => {
             />
           </Modal.Window>
         </Modal>
+        <Menus.Menu>
+          <Menus.Toggle id={cabin.id.toString()} />
+          <Menus.List id={cabin.id.toString()}>
+            <Menus.Button
+              icon={<HiMiniPencil />}
+              onClick={() => console.log("asa")}
+            >
+              Duplicate
+            </Menus.Button>
+            <Menus.Button
+              icon={<HiMiniPencil />}
+              onClick={() => console.log("asa")}
+            >
+              Edit
+            </Menus.Button>
+            <Menus.Button
+              icon={<HiMiniPencil />}
+              onClick={() => console.log("asa")}
+            >
+              Delete
+            </Menus.Button>
+          </Menus.List>
+        </Menus.Menu>
       </div>
     </Table.Row>
   );

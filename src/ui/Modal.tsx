@@ -11,7 +11,7 @@ import { HiXMark } from "react-icons/hi2";
 import styled from "styled-components";
 import { useClickOutSide } from "../hooks/userClickOutside";
 
-const DIV = styled.div`
+const StyledDiv = styled.div<HTMLDivElement>`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -124,12 +124,12 @@ const Window = ({
 
   return createPortal(
     <Overlay>
-      <DIV ref={ref}>
+      <StyledDiv ref={ref}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
         <Content>{cloneElement(children, { onClose: close })}</Content>
-      </DIV>
+      </StyledDiv>
     </Overlay>,
     document.body
   );

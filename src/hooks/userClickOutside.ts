@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 export const useClickOutSide = (handler: () => void) => {
-    const ref = useRef<any>();
+    const ref = useRef<HTMLElement | any>();
     useEffect(() => {
         const handleClickOutside = (e: any) => {
             if (ref.current && !ref.current.contains(e.target)) {

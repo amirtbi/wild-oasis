@@ -10,6 +10,8 @@ import {
 } from "react";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import styled from "styled-components";
+import { useClickOutSide } from "../hooks/userClickOutside";
+import { createPortal } from "react-dom";
 
 const Menu = styled.div`
   display: flex;
@@ -140,17 +142,20 @@ const List = ({
   id: string;
   children: JSX.Element | JSX.Element[] | string;
 }) => {
-  const { openId, position } = useContext(MenuContext) as {
+  const { openId, position, close } = useContext(MenuContext) as {
     openId: string;
     position: IPosition;
+    close: () => void;
   };
+  const { ref } = useClickOutSide(close);
 
   if (openId !== id) return null;
 
-  return (
-    <>
-      <StyledList position={position}>{children}</StyledList>
-    </>
+  return createPortal(
+    <StyledList position={position} ref={ref}>
+      {children}
+    </StyledList>,
+    document.body
   );
 };
 
@@ -160,19 +165,20 @@ const Button = ({
   children,
 }: {
   icon: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   children: JSX.Element | string;
 }) => {
+  const { close } = useContext(MenuContext) as { close: () => void };
+
   const handleOnclick = () => {
-    onClick();
+    onClick?.();
+    close();
   };
   return (
     <li>
       <StyledButton onClick={handleOnclick}>
-        <span>
-          {icon}
-          {children}
-        </span>
+        {icon}
+        <span>{children}</span>
       </StyledButton>
     </li>
   );

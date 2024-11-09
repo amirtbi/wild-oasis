@@ -25,7 +25,6 @@ export const CabinTable = () => {
             <div>CAPACITY</div>
             <div>PRICE</div>
             <div>DISCOUNT</div>
-            <div>Action</div>
           </Table.Header>
           <Table.Body
             data={cabins}
